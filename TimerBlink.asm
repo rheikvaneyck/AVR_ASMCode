@@ -49,7 +49,7 @@ SBR rmp, (1<<CTC1)     ; Setze Bit zum Zurücksetzen von Timer/Counter on Compar
 ANDI rmp, 0xF0         ; Setze die letzen 4 Bit im Arbeitsregister auf 0
 SBR rmp, (1<<CS13) | (1<<CS12) | (1<<CS11) | (1<<CS10) ; Setze Bits, um
                        ; den Takt für den Timer einzustellen (Abschn 13.3.1 im Datenblatt)
-                       ; der Prescaler is dann CK/16384 = 0.5s bei 8 MHz CPU
+                       ; der Prescaler is dann CK/16384 = 0.0164s bei 1 MHz CPU
 OUT TCCR1, rmp         ; schreibe Arbeitsregister nach TCCR1
                        ; Set Timer Interrupt:
 LDI rmp, (1<<OCIE1A)   ; baue Byte für Timer/Counter1 Output Compare Interrupt
@@ -57,6 +57,8 @@ OUT TIMSK, rmp         ; Schreibe Arbeitsregister nach TIMSK (Abschn13.3.6 im Da
 LDI rmp, 0x01          ; schreibe 1 ins Arbeitsregister
 OUT OCR1A, rmp         ; Setze Timer/Counter1 Compare Register A auf 1
 LDI rmp, TIMERVAL      ; Lade TIMERVAL ins Arbeitsregister
+                       ; mit dem Takteinstellungen oben braucht der Zähler 1s 
+                       ; um von 0x00 bis TIMERVAL zu zählen
 OUT OCR1C, rmp         ; Setze Time/Counter1 Compare Register C auf TIMERVAL
 SEI                    ; Aktiviere Interrupts
 IN rmp, GTCCR          ; Lade Register GTCCR ins Arbeitsregister
