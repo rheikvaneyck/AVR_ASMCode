@@ -26,6 +26,13 @@ LDI @0, HIGH(@1)
 OUT SPH, @0
 .endmacro
 
+.macro SVAR
+LDI R16, @1       
+LDI R30,LOW(@0)       ; Lade Z register low 
+LDI R31, HIGH(@0)     ; Lade Z register high 
+ST Z, R16             ; Speichere R16 an SRAM Adresse in Z
+.endmacro
+
 .org 0x0000
 RJMP init
 .org OC1Aaddr          ; Einsprung nach Timer/Counter1 Compare Match 1A
@@ -54,24 +61,9 @@ CBR rmp, (1<<PWM1A) | (1<<COM1A1) | (1<<COM1A0) ; Lösche Bits, um
                        ; Comparator A von Output Pin OC1A (= PB1) zu trennen
 OUT TCCR1, rmp         ; schreibe Arbeitsregister nach TCCR1
 
-;allocate_idle_time:
-LDI R16, IDLELEN       ; Lade IDLELEN to R1
-LDI R30,LOW(idle_time)  ; Lade Z register low 
-LDI R31, HIGH(idle_time) ; Lade Z register high 
-ST Z, R16               ; Speichere IDLETLEN in  timerval
-
-;allocate_init_time:
-LDI R16, INITLEN       ; Lade INITLEN to R1
-LDI R30,LOW(init_time)  ; Lade Z register low 
-LDI R31, HIGH(init_time) ; Lade Z register high 
-ST Z, R16               ; Speichere INITLEN in  timerval
-
-;allocate_start_time:
-LDI R16, STARTLEN       ; Lade STARTLEN to R1
-LDI R30,LOW(start_time)  ; Lade Z register low 
-LDI R31, HIGH(start_time) ; Lade Z register high 
-ST Z, R16               ; Speichere STARTLEN in  timerval
-
+SVAR idle_time, IDLELEN ; Deklariere idle_time mit IDLELEN 
+SVAR init_time, INITLEN ; Deklariere idle_time mit INITLEN 
+SVAR start_time, STARTLEN ; Deklariere idle_time mit STARTLEN 
 
 main:
 ; IDLE
