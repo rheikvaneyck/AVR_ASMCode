@@ -63,8 +63,8 @@ RJMP TIM0_COMPA_ISR
 .equ TRANSMIT_HEAD = 0x02
 .equ TRANSMIT_TAIL = 0x03
 .equ TRANSMITTED = 0x04
-.equ USI_SEED = 0x0C    ; USI_counter Seed auf 12 (von 15)
-msg: .db "Hallo Welt!" , 0 ; Welt!\n", 0
+.equ USI_SEED = 0x0B    ; USI_counter Seed auf 12 (von 15)
+msg: .db "Hallo Welt!" , 0x0A,0x0D, 0
 
 reset:
 ISP R16, RAMEND
